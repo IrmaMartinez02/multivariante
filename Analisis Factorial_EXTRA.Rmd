@@ -1,0 +1,110 @@
+---
+title: "ACP"
+author: "Irma Martínez"
+date: '2022-04-04'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Analisis de Componentes principales
+## Introducción
+Analisis de Componentes principales (*ACP*) de la base de datos AEROPUERTOS
+
+## Matriz de trabajo
+Analisis de base de datos Aerpuertos, extraida del paquete **datos**
+
+
+**PASO 1: INSTALACIÓN DEL PAQUETE DATOS**
+```{r,warning=FALSE,message=FALSE}
+install.packages("datos")
+```
+**PASO 2: ABRIR LIBRERIA**
+```{r,warning=FALSE,message=FALSE}
+library(datos)
+```
+**PASO 3: ELIGE UNA MATRIZ**
+```{r}
+aeropuertos1<-datos::aeropuertos
+```
+
+**PASO 4: EXPLORACIÓN DE LA MATRIZ**
+```{r}
+str(aeropuertos1)
+```
+
+**PASO 5:CONFIGURACIÓN Y/O FILTRADO DE VARIABLES (ME QUEDO CON LAS CUANTITATIVAS)**
+```{r,r,warning=FALSE,message=FALSE}
+colnames(aeropuertos1)
+aeropuertos2<-aeropuertos1[,3:6]
+colnames(aeropuertos2)
+```
+
+**PASO 6: DESARROLLAR EL PCA PASO A PASO**
+```{r}
+plot(aeropuertos2,col="aquamarine3",main="Aeropuertos")
+```
+
+#--------------------------------------
+#  PCA sintetizado
+#-------------------------------------
+```{r}
+x<-as.data.frame(aeropuertos2)
+```
+
+**VISUALIZACIÓN DE LOS DATOS**
+```{r}
+head(x)
+```
+
+# Aplicar el cálculo de la varianza a las columnas 
+# 1=filas, 2=columnas
+```{r}
+apply(x, 2, var)
+```
+
+# Centrado por la media y escalada por 
+# la desviacion standar (dividir entre sd).
+```{r}
+acp<-prcomp(x, center=TRUE, scale=TRUE)
+acp
+```
+# Visualizar el resumen
+```{r}
+summary(acp)
+```
+
+# Construcción del Biplot
+```{r}
+biplot(acp, scale=0)
+```
+
+# Componente principal calculada
+# Suma del producto de la matriz acp de cada uno
+# de los componentes por el dato de la matriz original
+# por filas
+# filas = 1
+# columnas = 2
+```{r}
+pc1<-apply(acp$rotation[,1]*x, 1, sum)
+pc2<-apply(acp$rotation[,2]*x, 1, sum)
+pc3<-apply(acp$rotation[,3]*x, 1, sum)
+```
+```{r}
+x$pc1<-pc1
+x$pc2<-pc2
+x$pc3<-pc3
+```
+
+
+
+
+
+
+
+
+
+
+
